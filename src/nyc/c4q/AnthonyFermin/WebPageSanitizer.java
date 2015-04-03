@@ -61,18 +61,7 @@ public class WebPageSanitizer {
 
             }
 
-
-
-
         }
-
-        // prints out unscraped HTML
-        System.out.println("Original HTML:\n");
-        for(String thisLine : lines){
-            System.out.println(thisLine);
-        }
-        System.out.println("---------------------------------------------------------- \n"); // divider
-
 
         return sanitizedHTML;
     }
@@ -86,6 +75,12 @@ public class WebPageSanitizer {
         URL url = HTTP.stringToURL(input);
         String document = HTTP.get(url); // http://docs.oracle.com/javase/7/docs/api/
 
+        System.out.println("Original Version of Webpage : \n\n" + document);
+
+        //divider
+        System.out.println("--------------------------------------------------------------------------------------------------------------------------------------------------- \n");
+
+        System.out.println("Sanitized Version of Webpage: \n\n");
         System.out.println(sanitize(document));
     }
 }

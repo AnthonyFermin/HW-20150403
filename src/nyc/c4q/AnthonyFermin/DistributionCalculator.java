@@ -55,7 +55,7 @@ public class DistributionCalculator
         for(Character letter : charCount.keySet()){
             sum += charCount.get(letter);
         }
-        // calculates percentage for each character and adds result to ArrayList<String> percentages
+        // calculates percentage for each character and adds result to ArrayList<String> percentages. Percentage = (specificLetterCount * 100) /sum
         for(Character letter : charCount.keySet()){
             double letterPercentage = ((double)charCount.get(letter) * 100) / sum;
             percentages.add(letter + " == " + letterPercentage + " %");
@@ -69,7 +69,7 @@ public class DistributionCalculator
         File text = new File("/Users/c4q-anthonyf/Desktop/accesscode/HW-20150403/src/nyc/c4q/AnthonyFermin/mobyDick.txt");
 
         ArrayList<String> percentages = calculate(text);
-        
+
         for(String charPercentages : percentages){
             System.out.println(charPercentages);
         }

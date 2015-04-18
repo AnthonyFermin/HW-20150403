@@ -1,7 +1,6 @@
 package nyc.c4q.AnthonyFermin;
 
 import java.net.URL;
-import java.util.ArrayList;
 import java.util.Scanner;
 
 /** Anthony Fermin
@@ -13,74 +12,51 @@ import java.util.Scanner;
 public class WebPageSanitizer {
 
     public static String sanitize(String html){
+
+
         String sanitizedHTML = "";
+        String scriptOpenTag = "<script";
+        String scriptCloseTag = "</script>";
+        int scriptOpenLength = scriptOpenTag.length();
+        int scriptCloseLength = "</script>".length();
+        boolean betweenScriptTag = false;
 
-        Scanner htmlSearch = new Scanner(html);
+        // loop iterates through each character in the html string
+        for(int i = 0; i < html.length(); i++){
 
-        ArrayList<String> lines = new ArrayList<String>();
+            System.out.println(true);
 
-        // adds all HTML lines to a ArrayList<String> lines
-        while(htmlSearch.hasNextLine()) {
-            lines.add(htmlSearch.nextLine());
-        }
+            /**
+             * if is betweenScriptTag (default to false) then checks for a closing script tag at index i, if found then set betweenScriptTag to false and move i to end of closing script tag
+             * else if its not betweenScriptTag, then check for an opening script tag at index i, if found then set betweenScriptTag to true
+             * else add current character to sanitizedHTML string
+             *
+             * This code will only work with proper HTML format. ie: It wont work properly if there are script tags within script tags or if there
+             * is an opening script tag and no closing script tag afterwards.
+             */
+            if(betweenScriptTag == true){
 
-        boolean scriptLine = false; // boolean determines whether currentLine is within a script tag or not. Default is false;
+                if(html.charAt(i) == '<'){
 
-        // loop iterates through all lines of HTML
-        for(int i = 0; i < lines.size(); i++){
-            String currentLine = lines.get(i);
-
-            // checks to see if current line of HTML contains the opening script tag
-            if(currentLine.contains("<script") && !scriptLine){
-
-                // gets index of first script open tag
-                int scriptLoc = currentLine.indexOf("<script");
-
-                // adds all text up to the open script tag to sanitizedHTML
-                for(int j = 0; j < scriptLoc; j++){
-                    sanitizedHTML += currentLine.charAt(j);
-                }
-
-                // gets text contained after open script tag
-                String afterScript = currentLine.substring(scriptLoc);
-
-                // if text after open tag also contains closing script tag, adds the text after script tag, if any
-                // else, it sets scriptLine boolean to true, letting the program know that it's now search for a closing script tag as a priority
-                if(afterScript.contains("</script>")){
-
-                    int endScriptLoc = afterScript.indexOf("</script>");
-
-                    if(!(endScriptLoc + 8 >= currentLine.length() - 1)){
-                        for(int k = endScriptLoc + 1; k < currentLine.length(); k++){
-                            sanitizedHTML += currentLine.charAt(k);
-                        }
+                    if(html.substring(i, i+scriptCloseLength).equals(scriptCloseTag))
+                    {
+                        i = i + scriptCloseLength - 1;
+                        betweenScriptTag = false;
                     }
-                }else{
-                    scriptLine = true;
+
                 }
 
-             // adds entire currentLine if it is currently not searching for closing script tag(scriptLine = false)
-             // and there is no open script tag in the line
-            }else if ((!currentLine.contains("<script")) && !scriptLine){
-                sanitizedHTML += currentLine;
-                sanitizedHTML += "\n";
+            }else if(html.charAt(i) == '<' && i + scriptOpenLength < html.length())
+            {
 
-             // skips the currentLine if currently searching for a closing script tag and currentLine does not contain it
-            }else if (scriptLine && !currentLine.contains("</script>")){
-                continue;
-
-             // adds text after closing script tag to sanitizedHTML String if currentLine has a closing tag
-             // and program is currently searching for a closing script tag (scriptLine = true)
-             //  - sets scriptLine to false once done
-            }else if(scriptLine && currentLine.contains("</script>")){
-                int endScriptLoc = currentLine.indexOf("</script>");
-
-                if(!(endScriptLoc + 8 >= currentLine.length() - 1)){
-                    for(int k = endScriptLoc + 8; k < currentLine.length(); k++){
-                        sanitizedHTML += currentLine.charAt(k);
-                    }
+                if(html.substring(i, i+scriptOpenLength).equals(scriptOpenTag))
+                {
+                    betweenScriptTag = true;
                 }
-                scriptLine = false;
+
+            }else{
+
+                sanitizedHTML += html.charAt(i);
 
             }
 

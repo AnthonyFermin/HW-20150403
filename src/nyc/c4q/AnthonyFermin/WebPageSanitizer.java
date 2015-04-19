@@ -34,7 +34,7 @@ public class WebPageSanitizer {
              * This code will only work with proper HTML format. ie: It wont work properly if there are script tags within script tags or if there
              * is an opening script tag and no closing script tag afterwards.
              */
-            if(betweenScriptTag == true){
+            if(betweenScriptTag){
 
                 if(html.charAt(i) == '<'){
 
